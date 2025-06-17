@@ -1,0 +1,29 @@
+name: Daily Commit
+
+on:
+  schedule:
+    # Runs every day at 04:15 UTC
+    - cron: "15 4 * * *"
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make a change
+        run: |
+          echo "Last run: $(date -u)" > last-run.txt
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add last-run.txt
+          git commit -m "Daily update: $(date -u)" || echo "No changes to commit"
+          git push
+
+      - name: Triggered by 23f3002277@ds.study.iitm.ac.in
+        run: echo "This step is labeled with your email."
